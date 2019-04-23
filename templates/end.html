@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="../static/style.css">
+    {% block head %}
+    <title> koniec </title>
+    {% endblock %}
+  </head>
+  <body>
+    <div id="content">
+     {% block content %}
+      {% if playerOne.score > playerTwo.score %}
+        <h2>GRATULACJE WYGRAŁ GRACZ PIERWSZY - {{ playerOne.name }}</h2>
+      {% elif playerOne.score < playerTwo.score %}
+        <h2>GRATULACJE WYGRAŁ GRACZ DRUGI - {{ playerTwo.name }}</h2>
+      {% else %}
+        <h2>REMIS</h2>
+      {% endif %}
+      <br>
+      Wynik pierwszego gracza: {{ playerOne.score }}<br>
+      Wynik drugiego gracza: {{ playerTwo.score }}  <br>
+     {% endblock %}
+    </div>
+    <div>
+        <form action = "{{ url_for('endGame') }}" method = "POST">
+            <button type="submit">Powrót do menu</button>
+        </form>
+    </div>
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2018-2019 by Bartłomiej Skrzypczak.
+      {% endblock %}
+    </div>
+  </body>
+</html>

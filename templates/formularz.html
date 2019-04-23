@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    {% block head %}
+    <title> Dungeon Crawler </title>
+    {% endblock %}
+  </head>
+  <body>
+    <div id="content" class="container">
+     {% block content %}
+            <div class="row">
+                <h1>Dungeon Crawler</h1>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Stwórz nową gre</h2>
+                    <form action = "{{ url_for('makeNewGame') }}" method = "POST">
+                        <label for="name">Imie postaci:</label>
+                        <input type="text" class="form-control" id="name" name="name">
+
+                        <label for="profession">Wybierz klase postaci:</label>
+                        <select class="form-control" id="profession" name="profession">
+                            <option value="81">Rycerz</option>
+                            <option value="82">Złodziej</option>
+                            <option value="83">Berserk</option>
+                        </select>
+
+                        <label for="size">Wybierz rozmiar mapy:</label>
+                        <select class="form-control" id="size" name="size">
+                            <option value="20">20x20</option>
+                            <option value="30">30x30</option>
+                            <option value="40">40x40</option>
+                        </select>
+
+                        <label for="mode">Wybierz rodzaj rozgrywki:</label>
+                        <select class="form-control" id="mode" name="mode">
+                            <option value="onePlayer">Pojedynczy gracz</option>
+                            <option value="hotSeat">Dwóch graczy - hot-seat</option>
+                            <option value="twoPlayers">Dwóch graczy - przez internet</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-default">Rozpocznij grę!</button>
+                    </form>
+                </div>
+                <div class="col-lg-6">
+                    <h2>Dołącz do istniejącej gry</h2>
+                </div>
+            </div>
+     {% endblock %}
+    </div>
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2018-2019 by Bartłomiej Skrzypczak.
+      {% endblock %}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+<html>
+  <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="../static/style.css">
+    {% block head %}
+    <title> granie w gierke </title>
+    {% endblock %}
+  </head>
+  <body>
+    <div id="content" class="container">
+        {% block content %}
+        <div class="row">
+            <h1>Dungeon Crawler</h1>
+        </div>
+        <div class="row">
+            <div id="map" class="col-lg-8">
+                {% if x < 6 %}
+                    {% set iteratorX = range(11) %}
+                {% elif x > size - 6 %}
+                    {% set iteratorX = range(size-11, size) %}
+                {% else %}
+                    {% set iteratorX = range(x-5, x+6) %}
+                {% endif %}
+                {% if y < 6 %}
+                    {% set iteratorY = range(11) %}
+                {% elif y > size - 6 %}
+                    {% set iteratorY = range(size-11, size) %}
+                {% else %}
+                    {% set iteratorY = range(y-5, y+6) %}
+                {% endif %}
+
+                {% for i in iteratorX %}
+                    {% for j in iteratorY %}
+                            <img src="../static/images/maps/{{ gameMap[i][j] }}.png" width="48" height="48">
+                    {% endfor %}
+                    <br>
+                {% endfor %}
+            </div>
+            <div id="buttons" class="col-lg-4">
+                <div class="row">
+                    <h3>{{ player.name }}</h3>
+                </div>
+
+                <div class="row">
+                    {% for i in range(player.hp) %}
+                        <img src="../static/images/interface/heart.png" width="34" height="34">
+                    {% endfor %}
+                </div>
+
+                <div class="row">
+                    Przedmioty bohatera: <br>
+                    <div class="col-lg-6">
+                        {% if player.weapon != "" %}
+                            <img src="../static/images/maps/{{ player.weapon.typeItem }}.png" width="34" height="34"><br>
+                            {% if player.weapon.addStrenght > 0 %}
+                                Siła + {{ player.weapon.addStrenght }}<br>
+                            {% endif %}
+                            {% if player.weapon.addStamina > 0 %}
+                                Wytrzymałość + {{ player.weapon.addStamina }}<br>
+                            {% endif %}
+                        {% else %}
+                            <img src="../static/images/maps/11.png" width="34" height="34"><br>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-lg-6">
+                        {% if player.talisman != "" %}
+                            <img src="../static/images/maps/{{ player.talisman.typeItem }}.png" width="34" height="34"><br>
+                            {% if player.talisman.addDexterity > 0 %}
+                                Zręczność +{{ player.talisman.addDexterity }}<br>
+                            {% endif %}
+                            {% if player.talisman.addStamina > 0 %}
+                                Wytrzymałość +{{ player.talisman.addStamina }}<br>
+                            {% endif %}
+                        {% else %}
+                            <img src="../static/images/maps/11.png" width="34" height="34"><br>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <h3>Wynik: {{ player.score }}</h3>
+                </div>
+
+                <div class="row">
+                    <tr>
+                        <th>Punkty ruchu: {{ player.movePoints }}</th>
+                        <th>Punkty ataku: {{ player.attackPoints }}</th>
+                    </tr>
+                </div>
+
+                <div class="row">
+                    <table>
+                        <form action = "{{ url_for('move', player=player.whichPlayer) }}" method = "POST">
+                        <tr>
+                            <th></th>
+                            <th> <button type="submit" name="move" value="up" style="font-size:36px"> <i class="fa fa-arrow-up"></i></button></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th><button type="submit" name="move" value="left" style="font-size:36px"> <i class="fa fa-arrow-left"></i></button></th>
+                            <th><button type="submit" name="move" value="pickup" style="font-size:36px"> <i class="fas fa-hand-point-down"></i></button></th>
+                            <th><button type="submit" name="move" value="right" style="font-size:36px"> <i class="fa fa-arrow-right"></i></button></th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th> <button type="submit" name="move" value="down" style="font-size:36px"> <i class="fa fa-arrow-down"></i></button></th>
+                            <th></th>
+                        </tr>
+                        </form>
+                    </table>
+                </div>
+
+                <div class="row">
+                    Lista pobliskich potworów:<br>
+                    {% for i in iteratorX %}
+                        {% for j in iteratorY %}
+                            {% if gameMap[i][j] in range(51, 60) %}
+                                <img src="../static/images/maps/{{ gameMap[i][j] }}.png" width="30" height="30">
+                                {% for tempMonster in monsterList %}
+                                    {% if tempMonster.x == i and tempMonster.y == j %}
+                                        {% for k in range(tempMonster.hp) %}
+                                            <img src="../static/images/interface/heart.png" width="20" height="20">
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                <br>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                <div class="row">
+                    <form action = "{{ url_for('endTurn') }}" method = "POST">
+                        <button type="submit" class="btn btn-default"> Koniec tury </button>
+                    </form>
+                </div>
+            </div>
+        {% endblock %}
+        </div>
+    </div>
+    <div id="footer">
+      {% block footer %}
+      &copy; Copyright 2018-2019 by Bartłomiej Skrzypczak.
+      {% endblock %}
+    </div>
+  </body>
+</html>
